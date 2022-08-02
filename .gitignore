@@ -1,0 +1,8 @@
+soot-infoflow-summaries/build/
+soot-infoflow-summaries/target/
+dataleak/target/
+/.metadata
+/.recommenders
+.idea/
+*.iml
+.DS_Store

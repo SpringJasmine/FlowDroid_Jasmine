@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- Appenders 日志信息输出目的地 -->
+
+    <!-- ConsoleAppender -->
+    <!-- 每个ConsoleAppender都有一个target，表示它的输出目的地。 -->
+    <!-- 它可以是System.out，标准输出设备（缓冲显示屏） -->
+    <!-- 或者是System.err，标准错误设备（不缓冲显示屏） -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p: %c - %m%n" />
+        </layout>
+    </appender>
+
+    <!-- RollingFileAppender 回滚文件 -->
+    <!-- Append true，默认每次启动系统，日志继续输出到原来的文件，而不是清空了再来 -->
+    <!-- MaxFileSize 后缀可以是KB, MB 或者是 GB. 在日志文件到达该大小时，将会自动滚动，即将原来的内容移到mylog.log.1文件 -->
+    <!-- MaxBackupIndex 最多20个 -->
+    <!-- PatternLayout 控制日志输出的格式化，参考上面的那些符合说明，自己怼自己想要的格式。 -->
+    <!-- filter 级别范围过滤器 -->
+    <!-- levelMin levelMax 范围 -->
+    <appender name="StreamOperateFile" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="log/streamOperate.log" />
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <param name="MaxBackupIndex" value="20"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n" />
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="levelMin" value="INFO" />
+            <param name="levelMax" value="INFO" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+    </appender>
+
+    <!-- 同上 回滚文件，有2个的原因就是演示，把不同的日志输出到不同的文件 -->
+    <appender name="File" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="log/production.log" />
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <param name="MaxBackupIndex" value="20"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p: %c - %m%n" />
+        </layout>
+    </appender>
+
+    <!-- 下面这些就是根据 这些路径来控制对应包下的文件的日志输出级别，基本上都是报错了，才输出日志-->
+    <logger name="org.springframework.core">
+        <level value="error" />
+    </logger>
+
+    <logger name="org.springframework.beans">
+        <level value="error" />
+    </logger>
+
+    <logger name="org.springframework.context">
+        <level value="error" />
+    </logger>
+
+    <logger name="org.springframework.http">
+        <level value="error" />
+    </logger>
+
+    <logger name="org.springframework.web">
+        <level value="error" />
+    </logger>
+
+    <logger name="org.elasticsearch.client.transport">
+        <level value="debug" />
+    </logger>
+
+    <logger name="org.springframework.data.mongodb">
+        <level value="error" />
+    </logger>
+
+    <!-- 这个就是自定义的一个logger -->
+    <!-- 输出级别是info级别及以上的日志，不要怕，StreamOperateFile已经过滤，只输出info级别的日志 -->
+    <!-- additivity 这个默认是true，即继承父类 root logger -->
+    <!-- 也就是说，你的这个日志也会在root的logger里面输出的，我这里配置false，就是不继承，各走各的。 -->
+    <!-- appender-ref 也就是说这个logger的输出目的地是哪里，ref就是关联到上面声明的一个file，一个console -->
+    <logger name="StreamOperateFile" additivity="false">
+        <level value="info" />
+        <appender-ref ref="StreamOperateFile" />
+        <appender-ref ref="console" />
+    </logger>
+
+    <!-- 传说中的根logger -->
+    <!-- 输出级别是info级别及以上的日志，下面的ref关联的两个appender没有filter设置，所以，info及以上的日志都是会输出到这2个appender的 -->
+    <root>
+        <priority value="info" />
+        <appender-ref ref="console" />
+        <appender-ref ref="File" />
+    </root>
+
+</log4j:configuration>

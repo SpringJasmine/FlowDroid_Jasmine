@@ -1,0 +1,5 @@
+{
+  "source": "/Users/FlowDroidPlus/dataleak/src/main/resources/source.json",
+  "main_class": "com.ruoyi.RuoYiApplication",
+  "edge_config": "/Users/FlowDroidPlus/dataleak/src/main/resources/config.properties"
+}
